@@ -29,20 +29,23 @@
  */
 
 #include "MKL25Z4.h"
+#include "definitions.h"
+#include "control.h"
+#include "transmission.h"
+#include "commands.h"
 
-static int i = 0;
+int main(void) {
 
-int main(void)
-{
+	message m;
+	uint8_t data[MAX_DATA_SIZE];
+	int i = 0;
+	for(i; i < 16; i++) {
+		data[i] = i;
+	}
+	data[1] = 16;
+	decode_message(&m, data, 16);
+	while(1);
 
-    /* Write your code here */
-
-    /* This for loop should be replaced. By default this loop allows a single stepping. */
-    for (;;) {
-        i++;
-    }
-    /* Never leave main */
-    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // EOF
