@@ -8,10 +8,8 @@
 #ifndef SOURCES_STATE_MACHINE_H_
 #define SOURCES_STATE_MACHINE_H_
 
-
 #include "definitions.h"
 #include "control.h"
-#include "commands.h"
 #include "uart.h"
 #include "definitions.h"
 #include "led.h"
@@ -48,7 +46,7 @@ typedef enum{
 }current_state_t;
 
 typedef int32_t (*state_machine_t)(command_t*);
-
+typedef void (*callback_function_t)(command_t*);
 
 /* send_message(message * m)
  * 	Will send the message data in m. First it will generate the checksum then it will

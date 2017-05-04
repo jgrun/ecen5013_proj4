@@ -14,6 +14,10 @@
 #define GREEN 1
 #define BLUE 2
 
+#define RED_LED 1 << 18
+#define GREEN_LED 1 << 19
+#define BLUE_LED 1 << 1
+
 #define LED_RED_TPM_CH   TPM_CH0
 #define LED_GREEN_TPM_CH TPM_CH1
 #define LED_BLUE_TPM_CH  TPM_CH2

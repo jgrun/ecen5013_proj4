@@ -6,6 +6,18 @@
  */
 #include "state_machine.h"
 
+extern void get_timestamp(command_t* cmd);
+extern void reset_software(command_t* cmd);
+extern void set_red(command_t* cmd);
+extern void set_green(command_t* cmd);
+extern void set_blue(command_t* cmd);
+
+static callback_function_t callback_function[]= {get_timestamp,
+												 reset_software,
+												 set_red,
+												 set_green,
+												 set_blue};
+
 /* uint8_t get_message_checksum(command_t* cmd)
  *  returns 8 bit checksum for message m
  *  checksum calculated as byte wise xor of command
@@ -38,7 +50,7 @@ static uint8_t is_valid_checksum(command_t* cmd) {
 int32_t send_command(command_t* cmd) {
 
 	if(cmd == NULL) return -1;
-	if(cmd->checksum= get_command_checksum(cmd) == -1) return -1;
+	if(cmd->checksum = get_command_checksum(cmd) == -1) return -1;
 	uart_send_byte_n((uint8_t*)cmd, cmd->length);
 	return 0;
 }
@@ -65,27 +77,7 @@ int32_t decode_command(command_t* cmd) {
 }
 
 int32_t execute_command(command_t* cmd){
-
-	int8_t timebuf[8];
-	if(cmd == NULL) return -1;
-	switch(cmd->command){
-	case GET_TIMESTAMP:
-		my_itoa(timebuf, systick_get_time_ms(), 10);
-		uart_send_byte_n(timebuf, 6);
-		break;
-	case RESET:
-		NVIC_SystemReset();
-		break;
-	case RED_CONTROL:
-		pwm_set_duty_cycle(LED_RED_TPM_CH, cmd->data[0]);
-		break;
-	case GREEN_CONTROL:
-		pwm_set_duty_cycle(LED_GREEN_TPM_CH, cmd->data[0]);
-		break;
-	case BLUE_CONTROL:
-		pwm_set_duty_cycle(LED_BLUE_TPM_CH, cmd->data[0]);
-		break;
-	}
+	callback_function[cmd->command](cmd);
 	return 0;
 }
 

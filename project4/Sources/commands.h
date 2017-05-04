@@ -7,26 +7,21 @@
 
 #ifndef __COMMANDS_H__
 #define __COMMANDS_H__
-
+#include "state_machine.h"
 #include "definitions.h"
 #include "control.h"
+#include "led.h"
+#include "pwm.h"
 
-#define RED_LED 1 << 18
-#define GREEN_LED 1 << 19
-#define BLUE_LED 1 << 1
 
-void get_timestamp(uint8_t value);
+void get_timestamp(command_t* cmd);
 
-void reset_software(uint8_t value);
+void reset_software(command_t* cmd);
 
-void set_red(uint8_t value);
+void set_red(command_t* cmd);
 
-void set_green(uint8_t value);
+void set_green(command_t* cmd);
 
-void set_blue(uint8_t value);
-
-void set_rgb(uint8_t red, uint8_t green, uint8_t blue);
-
-void set_rgb_hex(uint32_t rgb);
+void set_blue(command_t* cmd);
 
 #endif
