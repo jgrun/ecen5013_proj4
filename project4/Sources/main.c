@@ -49,6 +49,7 @@ current_state_t current_state = read_state;
 int main(void) {
 
 	command_t cmd;
+	uint32_t t, i;
 	led_init();
 	pwm_init();
 	uart_init();

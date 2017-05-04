@@ -66,10 +66,12 @@ int32_t decode_command(command_t* cmd) {
 
 int32_t execute_command(command_t* cmd){
 
+	int8_t timebuf[8];
 	if(cmd == NULL) return -1;
 	switch(cmd->command){
 	case GET_TIMESTAMP:
-		__NOP();
+		my_itoa(timebuf, systick_get_time_ms(), 10);
+		uart_send_byte_n(timebuf, 6);
 		break;
 	case RESET:
 		NVIC_SystemReset();

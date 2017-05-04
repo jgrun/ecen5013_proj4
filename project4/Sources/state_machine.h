@@ -16,6 +16,8 @@
 #include "definitions.h"
 #include "led.h"
 #include "pwm.h"
+#include "timer.h"
+#include "data.h"
 #include <stdlib.h>
 
 #pragma pack(1)

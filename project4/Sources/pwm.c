@@ -42,7 +42,7 @@ void pwm_set_duty_cycle(tpm0_channel_t channel, uint32_t duty_cycle){
 
 	TPM_CnV_REG(TPM0,(uint32_t)channel) = ((uint16_t)((duty_cycle/100.0) * 0xFFFF));
 	// adjust duty cycle to appropriate percentage of counts
-	TPM0_SC |= TPM_SC_CMOD(1);
+	TPM0_SC |= TPM_SC_CMOD(1)|TPM_SC_TOIE_MASK;
 }
 
 extern void TPM0_IRQHandler(void){
@@ -52,7 +52,7 @@ extern void TPM0_IRQHandler(void){
 		led_red_set();
 		led_green_set();
 		led_blue_set();
-		TPM0_SC = TPM_SC_TOF_MASK;
+		TPM0_SC |= TPM_SC_TOF_MASK;
 	}
 	if(status & TPM_STATUS_CH0F_MASK){
 		led_red_clear();
