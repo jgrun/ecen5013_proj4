@@ -33,68 +33,44 @@
 #include "control.h"
 #include "commands.h"
 #include "transmission.h"
+#include "led.h"
+#include "pwm.h"
+#include "uart.h"
+#include "memory.h"
+#include "data.h"
+#include "timer.h"
+#include "state_machine.h"
+state_machine_t state_machine[] = {read_command,
+								   decode_command,
+								   execute_command};
 
-
-// red PTB18
-// green PTB19
-// blue PTD1
-
-extern uint8_t red_pw;
-extern uint8_t green_pw;
-extern uint8_t blue_pw;
-
-// Holds count from timer
-uint8_t count;
+current_state_t current_state = read_state;
 
 int main(void) {
 
-	message m;
-	uint8_t data[MAX_DATA_SIZE];
-	int i = 0;
-	for(i; i < 16; i++) {
-		data[i] = i;
-	}
-	data[1] = 16;
-	decode_message(&m, data, 16);
+	command_t cmd;
+	led_init();
+	pwm_init();
+	uart_init();
+	systick_init();
+	__enable_irq();
 	while(1) {
-		toggle_leds();
+		switch(current_state){
+		case read_state:
+			if(state_machine[read_state](&cmd) == 0)
+				current_state = decode_state;
+			break;
+		case decode_state:
+			if(state_machine[decode_state](&cmd) == 0)
+				current_state = execute_state;
+			else
+				current_state = read_state;
+			break;
+		case execute_state:
+			state_machine[execute_state](&cmd);
+			current_state = read_state;
+			break;
+		}
 	}
 
 }
-
-void toggle_leds() {
-	if(count >= red_pw) (led_on[RED])();
-	else (led_off[RED])();
-	if(count >= green_pw) (led_on[GREEN])();
-	else (led_off[GREEN])();
-	if(count >= blue_pw) (led_on[BLUE])();
-	else (led_off[BLUE])();
-}
-
-void red_on() {
-	return;
-}
-
-void blue_on() {
-	return;
-}
-
-void green_on() {
-	return;
-}
-
-void red_off() {
-	return;
-}
-
-void blue_off() {
-	return;
-}
-
-void green_off() {
-	return;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// EOF
-////////////////////////////////////////////////////////////////////////////////
