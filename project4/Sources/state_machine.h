@@ -20,6 +20,7 @@
 
 #pragma pack(1)
 typedef enum commands_t {
+	// send RTC/Systick time stamp to host
 	GET_TIMESTAMP = 0x00,
 	// Perform software reset
 	RESET         = 0x01,
@@ -43,41 +44,62 @@ typedef enum{
 	read_state,
 	decode_state,
 	execute_state
-}current_state_t;
+}state_t;
 
 typedef int32_t (*state_machine_t)(command_t*);
 typedef void (*callback_function_t)(command_t*);
 
-/* send_message(message * m)
- * 	Will send the message data in m. First it will generate the checksum then it will
+/* send_message(command_t* cmd)
+ * 	Will send the data contained in the the paramter. First it will generate the checksum then it will
  * 	send the data starting with the command, then the length, then the data, then the
  * 	checksum.
  *
- * INPUTS:
- * 	- message * m: message type pointer containing the command, data, and length of data parameters.
+ * INPUT:
+ * 	> command_t* cmd: reference to command object containing data to send
  *
- * OUTPUTS:
- *  - 0 for success
- *  - -1 for error (NULL pointer, checksum failure, uart failure)
+ * OUTPUT:
+ *  > 0 for success
+ *  > -1 for error (NULL pointer, checksum failure, uart failure)
+ *
  */
 int32_t send_command(command_t* cmd);
 
-
+/* int32_t read_command(command_t* cmd)
+ *	Reads command from UART connection and writes data into cmd
+ *
+ *	INPUT:
+ *	> command_t* cmd: reference to command object which will be filled
+ *		with received command data
+ *	OUTPUT:
+ *	>  0 for success
+ *	> -1 for error
+ *
+ */
 int32_t read_command(command_t* cmd);
 
-/* int32_t decode_message(command_t * cmd)
- * 	Validates message as being correct after it is read in in S1 (read_message)
+/* int32_t decode_command(command_t * cmd)
+ * 	Validates command object by verifying checksum is correct and command is valid
  *
- * INPUTS:
- *  - commant_t * cmd: reference to command object
+ * INPUT:
+ *  > command_t * cmd: reference to command object to be verified
  *
- * OUTPUTS:
- *  -  -1 if command is invalid (failed checksum, bad pointer, bad payload size)
- *  -  0 if command is valid and able to be executed
+ * OUTPUT:
+ *  >  -1 if command is invalid (failed checksum, NULL pointer, invalid command)
+ *  >   0 if command is valid and able to be executed
+ *
  */
 int32_t decode_command(command_t* cmd);
 
-
+/* int32_t execute_command(command_t* cmd)
+ * 	executes appropriate callback function for command object
+ *
+ * INPUT:
+ * > command_t* cmd: reference to command object whose callback is to be ran
+ *
+ * OUTPUT:
+ * > 0
+ *
+ */
 int32_t execute_command(command_t* cmd);
 
 

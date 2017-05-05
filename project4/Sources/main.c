@@ -40,16 +40,16 @@
 #include "data.h"
 #include "timer.h"
 #include "state_machine.h"
-state_machine_t state_machine[] = {read_command,
-								   decode_command,
-								   execute_command};
-
-current_state_t current_state = read_state;
 
 int main(void) {
 
+	state_machine_t state_machine[] = {read_command,
+									   decode_command,
+									   execute_command};
+
+	state_t current_state = read_state;
 	command_t cmd;
-	uint32_t t, i;
+
 	led_init();
 	pwm_init();
 	uart_init();

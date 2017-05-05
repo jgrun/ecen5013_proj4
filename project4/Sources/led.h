@@ -22,23 +22,7 @@
 #define LED_GREEN_TPM_CH TPM_CH1
 #define LED_BLUE_TPM_CH  TPM_CH2
 
-/*void (* led_on[])() = {
-		red_on,
-		green_on,
-		blue_on
-};
-*/
-
-/*
-void (* led_off[])() = {
-		red_off,
-		green_off,
-		blue_off
-};
-*/
 void led_init(void);
-
-
 
 __attribute__((always_inline))
 inline void led_red_clear(void){
@@ -84,9 +68,5 @@ __attribute__((always_inline))
 inline void led_blue_toggle(void){
 	GPIOD_PTOR |= (1<<1);
 }
-
-int32_t red_led_set(uint32_t brightness);
-int32_t green_led_set(uint32_t brightness);
-int32_t blue_led_set(uint32_t brightness);
 
 #endif /* SOURCES_LED_H_ */
